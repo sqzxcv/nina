@@ -1,10 +1,10 @@
 const router = require('koa-router')()
+const Brain = require('../src/brain');
+var brain = new Brain();
 
 router.get('/', async (ctx, next) => {
-  // await ctx.render('index', {
-  //   title: 'Hello Koa 2!'
-  // })
-  await ctx.render('index',{"title":"koa demo"})
+
+  await ctx.render('index',{"title":"畅听吧"})
 })
 
 router.get('/string', async (ctx, next) => {

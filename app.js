@@ -1,35 +1,79 @@
-var app = require('koa')()
-  , logger = require('koa-logger')
-  , json = require('koa-json')
-  , views = require('koa-views')
-  , onerror = require('koa-onerror');
+var debug = require('debug')('nina');
+var koa = require('koa');
+//配置文件
+var config = require('./config/config');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-
-// error handler
-onerror(app);
-
-// global middlewares
-app.use(views('views', {
-  root: __dirname + '/views',
-  default: 'jade'
-}));
-app.use(require('koa-bodyparser')());
-app.use(json());
-app.use(logger());
-
+var app = koa();
 app.use(function *(next){
-  var start = new Date;
-  yield next;
-  var ms = new Date - start;
-  console.log('%s %s - %s', this.method, this.url, ms);
+    //config 注入中间件，方便调用配置信息
+    if(!this.config){
+        this.config = config;
+    }
+    yield next;
 });
 
-app.use(require('koa-static')(__dirname + '/public'));
+//log记录
+var Logger = require('mini-logger');
+var logger = Logger({
+    dir: config.logDir,
+    format: 'YYYY-MM-DD-[{category}][.log]'
+});
 
-// routes definition
-app.use(index.routes(), index.allowedMethods());
-app.use(users.routes(), users.allowedMethods());
+//router use : this.logger.error(new Error(''))
+app.context.logger = logger;
+
+var onerror = require('koa-onerror');
+onerror(app);
+
+//xtemplate对koa的适配
+var xtplApp = require('xtpl/lib/koa');
+//xtemplate模板渲染
+xtplApp(app,{
+    //配置模板目录
+    views: config.viewDir
+});
+
+
+var redisStore = require('koa-redis')(config.redis);
+app.redis = redisStore.client;
+
+
+
+//session中间件
+var session = require('koa-generic-session');
+
+    var sessionConfig = {
+    store: redisStore,
+    prefix: 'nina:sess:',
+    key: 'nina.sid'
+    };
+
+app.use(session(sessionConfig));
+
+
+//post body 解析
+var bodyParser = require('koa-bodyparser');
+app.use(bodyParser());
+//数据校验
+var validator = require('koa-validator');
+app.use(validator());
+
+//静态文件cache
+var staticCache = require('koa-static-cache');
+var staticDir = config.staticDir;
+app.use(staticCache(staticDir+'/js'));
+app.use(staticCache(staticDir+'/css'));
+
+//路由
+var router = require('koa-router');
+app.use(router(app));
+
+//应用路由
+var appRouter = require('./router/index');
+appRouter(app);
+
+app.listen(config.port);
+console.log('listening on port %s',config.port);
 
 module.exports = app;
+

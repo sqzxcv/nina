@@ -8,4 +8,7 @@
 
 {{#block ("body")}}
 <p>这是个 koa2 的测试页面</p>
+<audio src="./resources/test.mp3" controls="controls" autoplay="autoplay" loop="loop">
+Your browser does not support the audio tag.
+</audio>
 {{/block}}

@@ -4,6 +4,8 @@ var brain = new Brain();
 
 router.get('/', async (ctx, next) => {
 
+  // brain.fetchTodayNews();
+  brain.monitorWebSite('');
   await ctx.render('index',{"title":"畅听吧"})
 })
 

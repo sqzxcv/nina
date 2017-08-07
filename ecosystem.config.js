@@ -10,7 +10,7 @@ module.exports = {
       name: "nina",
       max_memory_restart: "1024M",
       log_date_format: "YYYY-MM-DD HH:mm:ss SSS",
-      script: "index.js",
+      script: "./bin/www",
       out_file: "/var/log/nina/app.log",
       error_file: "/var/log/nina/err.log",
       port: "80",

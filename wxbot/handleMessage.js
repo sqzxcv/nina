@@ -1,28 +1,30 @@
-require('babel-register')
+// require('babel-register')
 const fs = require('fs')
 const parseString = require('xml2js').parseString
 const Wechat = require('wechat4u')
 var mysql = require('mysql')
-const newspaper = require("../src/brain/newspaper")
+const audioConvertFromURLs = require("../src/brain/newspaper")
 var moment = require('moment');
+const util = require('util');
+const xmlparseString = util.promisify(require('xml2js').parseString)
 var wxbot = null;
 
-module.exports = function (bot) {
+const handMsg = (bot) => {
 
     wxbot = bot;
     /**
      * 如何处理会话消息
      */
 
-    bot.on('message', msg => {
+    bot.on('message', async msg => {
         /**
          * 获取消息时间
          */
         console.log(`----------${msg.getDisplayTime()}-----${bot.contacts[msg.FromUserName].getDisplayName()}-----`)
-        // 正式环境这行代码不要注释
-        if (bot.contacts[msg.FromUserName].getDisplayName() != '小冰') {
-            return;
-        }
+        // // 正式环境这行代码不要注释
+        // if (bot.contacts[msg.FromUserName].getDisplayName() != '小冰') {
+        //     return;
+        // }
         /**
          * 判断消息类型
          */
@@ -36,17 +38,19 @@ module.exports = function (bot) {
 
                     if (global.waitMsgUser.length != 0) {
                         bot.sendMsg(msg.Content, global.waitMsgUser);
-                    } 
+                    }
                 } else {
                     links = pitchLinkFromContent(msg.Content)
-                    if (links.length != 0) {
+                    if (links != null && links.length != 0) {
 
-                        mp3url = []
-                        for (var link in links) {
-                            mp3url = newspaper(link)
+                        bot.sendMsg("收到" + links.length + "篇文章,正在转化为录音,请稍后~~", msg.FromUserName)
+                        var mp3urls = await audioConvertFromURLs(links)
+                        if (mp3urls.length != 0) {
+                            bot.sendMsg("音频文件地址:" + mp3urls, msg.FromUserName)
+                        } else if (global.mutang.length != 0) {
+                            bot.sendMsg("音频转换失败,失败的链接:" + links, global.mutang)
                         }
-                        bot.sendMsg(mp3url,msg.FromUserName)
-                    } else {
+                    } else if (global.xiaobing.length != 0) {
                         bot.sendMsg(msg.Content, global.xiaobing);
                         global.waitMsgUser = msg.FromUserName;
                     }
@@ -86,7 +90,7 @@ module.exports = function (bot) {
 
                     if (global.waitMsgUser.length != 0) {
                         bot.sendMsg('[语音消息]', global.waitMsgUser);
-                    } 
+                    }
                 } else {
                     bot.sendMsg('[语音消息]', global.xiaobing);
                     global.waitMsgUser = msg.FromUserName;
@@ -106,7 +110,7 @@ module.exports = function (bot) {
 
                     if (global.waitMsgUser.length != 0) {
                         bot.sendMsg('[表情消息]', global.waitMsgUser);
-                    } 
+                    }
                 } else {
                     bot.sendMsg('[表情消息]', global.xiaobing);
                     global.waitMsgUser = msg.FromUserName;
@@ -127,7 +131,7 @@ module.exports = function (bot) {
 
                     if (global.waitMsgUser.length != 0) {
                         bot.sendMsg('[视频消息]', global.waitMsgUser);
-                    } 
+                    }
                 } else {
                     bot.sendMsg('[视频消息]', global.xiaobing);
                     global.waitMsgUser = msg.FromUserName;
@@ -145,15 +149,22 @@ module.exports = function (bot) {
                     }).catch(err => {
                         bot.emit('error', err)
                     })
-                }
-                if (bot.contacts[msg.FromUserName].getDisplayName() == '小冰') {
-
-                    if (global.waitMsgUser.length != 0) {
-                        bot.sendMsg('[文件消息]', global.waitMsgUser);
-                    } 
-                } else {
-                    bot.sendMsg('[文件消息]', global.xiaobing);
-                    global.waitMsgUser = msg.FromUserName;
+                } else if (msg.AppMsgType == 5) {
+                    /**
+                     * 转发的文章
+                     */
+                    try {
+                        var result = await xmlparseString(msg.Content)
+                        var urls = result.msg.appmsg[0].url
+                        bot.sendMsg("收到" + urls.length + "篇文章,正在转化为录音,请稍后~~", msg.FromUserName)
+                        var mp3urls = await audioConvertFromURLs(urls)
+                    } catch (error) {
+                        console.error(error)
+                        bot.sendMsg("获取转发的链接失败,")
+                        if (global.mutang.length != 0) {
+                            bot.sendMsg("音频转换失败,失败的链接:" + links, global.mutang)
+                        }
+                    }
                 }
                 break
             default:
@@ -163,11 +174,7 @@ module.exports = function (bot) {
 
 }
 
-
-function notifySupportWithInfo(msg) {
-
-    // wxbot.sendMsg(msg, "@e5588d1d843d690a496dcb16809f7b6d");
-}
+module.exports = handMsg
 
 function pitchLinkFromContent(content) {
     str = /(http:\/\/|https:\/\/|www)((\w|=|\?|\.|\/|&|-)+)/g

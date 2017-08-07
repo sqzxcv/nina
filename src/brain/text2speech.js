@@ -27,7 +27,7 @@ const text2speech = async(text) => {
     console.log('stderr:', stderr);
     if (stderr.length == 0) {
         console.log('stdout:', stdout);
-        result = stdout.split('~~~~------follow result:~~~~~~~------')
+        var result = stdout.split('~~~~------follow result:~~~~~~~------')
         if (result.length == 2) {
             res = JSON.parse(result[1])['audio']
             return res

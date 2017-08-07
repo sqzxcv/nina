@@ -71,6 +71,8 @@ module.exports = function () {
         for (var contact in bot.contacts) {
             if (bot.contacts[contact]['NickName'] == '小冰') {
                 global.xiaobing = bot.contacts[contact]['UserName'];
+            } else if (bot.contacts[contact]['NickName'] == '木糖') {
+                global.mutang = bot.contacts[contact]['UserName']
             }
         }
     })

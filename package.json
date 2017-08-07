@@ -12,7 +12,6 @@
     "axios": "^0.15.3",
     "babel-register": "^6.24.1",
     "bl": "^1.2.1",
-    "debug": "^2.6.3",
     "form-data": "^2.1.2",
     "koa": "^2.3.0",
     "koa-bodyparser": "^3.2.0",

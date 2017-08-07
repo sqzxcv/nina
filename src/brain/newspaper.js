@@ -3,12 +3,13 @@
 const util = require('util');
 const request = util.promisify(require("request"))
 const text2speech = require('./text2speech')
+const config = require('../../config')
 
 var retryCount = 0
 const newspaper = async(pasreurl) => {
 
     var options = {
-        url: `http://localhost:8082/presedocument?url=${pasreurl}`
+        url: `${config['newspaper']}${pasreurl}`
     }
     try {
         const {

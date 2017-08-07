@@ -7,12 +7,12 @@ module.exports = {
 
     // First application
     {
-      name: "wechatautoReceipt",
+      name: "nina",
       max_memory_restart: "1024M",
       log_date_format: "YYYY-MM-DD HH:mm:ss SSS",
       script: "index.js",
-      out_file: "/var/log/wechatautoReceipt/app.log",
-      error_file: "/var/log/wechatautoReceipt/err.log",
+      out_file: "/var/log/nina/app.log",
+      error_file: "/var/log/nina/err.log",
       port: "80",
       env: {
         COMMON_VARIABLE: 'true'
@@ -32,8 +32,8 @@ module.exports = {
       user: 'root',
       host: '116.62.195.14',
       ref: 'origin/master',
-      repo: 'git@github.com:sqzxcv/wechatautoReceipt.git',
-      path: '/var/www/wechatautoReceipt',
+      repo: 'git@github.com:sqzxcv/nina.git',
+      path: '/var/www/nina',
       "post-deploy": 'git pull && npm install && pm2 reload ecosystem.config.js --env production'
     },
     dev: {

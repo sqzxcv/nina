@@ -4,3 +4,4 @@ node_modules/
 .DS_Store
 yo-tmp/
 package-lock.json
+node_modules

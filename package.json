@@ -12,6 +12,7 @@
     "axios": "^0.15.3",
     "babel-register": "^6.24.1",
     "bl": "^1.2.1",
+    "debug": "^2.6.8",
     "form-data": "^2.1.2",
     "koa": "^2.3.0",
     "koa-bodyparser": "^3.2.0",
@@ -29,11 +30,11 @@
     "nodemailer": "^4.0.1",
     "pug": "^2.0.0-rc.1",
     "qrcode-terminal": "^0.11.0",
+    "request": "^2.81.0",
     "util": "^0.10.3",
     "wechat4u": "^0.7.6",
     "xml2js": "^0.4.17",
     "xtemplate": "^4.7.2",
-    "debug": "^2.6.8",
     "xtpl": "^3.3.0"
   },
   "devDependencies": {

@@ -34,7 +34,7 @@ module.exports = {
       ref: 'origin/master',
       repo: 'git@github.com:sqzxcv/nina.git',
       path: '/var/www/nina',
-      "post-deploy": 'git pull && npm install && pm2 reload ecosystem.config.js --env production'
+      "post-deploy": 'nvm use 8.0.0 && git pull && npm install && pm2 reload ecosystem.config.js --env production'
     },
     dev: {
       user: 'root',

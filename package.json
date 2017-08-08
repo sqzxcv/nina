@@ -33,6 +33,7 @@
     "wechat4u": "^0.7.6",
     "xml2js": "^0.4.17",
     "xtemplate": "^4.7.2",
+    "debug": "^2.6.8",
     "xtpl": "^3.3.0"
   },
   "devDependencies": {

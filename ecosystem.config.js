@@ -13,7 +13,7 @@ module.exports = {
       script: "./bin/www",
       out_file: "/var/log/nina/app.log",
       error_file: "/var/log/nina/err.log",
-      port: "80",
+      port: "3085",
       env: {
         COMMON_VARIABLE: 'true'
       },

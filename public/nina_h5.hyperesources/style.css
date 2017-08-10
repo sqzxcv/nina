@@ -1,0 +1,12 @@
+ .playlist {
+    margin-top: 20px;
+    margin-left: 25px;
+    margin-bottom: 20px;
+    margin-right: 25px;
+} 
+
+div#audioItem {
+    /* padding-bottom: 10px; */
+    padding-top: 5px;
+    /* margin-bottom: 10px; */
+}

@@ -7,9 +7,9 @@ const config = require('../../config')
 
 var retryCount = 0
 const newspaper = async(pasreurl) => {
-
+    
     var options = {
-        url: `${config['newspaper']}${pasreurl}`
+        url: `${config['newspaper']}${encodeURIComponent(pasreurl)}`
     }
     try {
         const {
@@ -33,16 +33,17 @@ const audioConvertFromURL = async(pasreurl) => {
 
     var dict = await newspaper(pasreurl)
     var audioPath = await text2speech(dict['content'])
-    return audioPath
+    dict['audio'] = audioPath
+    return dict
 }
 
 const audiosConvertFromURLs = async(links) => {
     var urls = links.slice(0)
-    var mp3url = []
+    var mp3urls = []
     for (var i = 0; i < urls.length; i++) {
-        mp3url = await audioConvertFromURL(links[i])
+        mp3urls.push(await audioConvertFromURL(links[i]))
     }
-    return mp3url
+    return mp3urls
 }
 
 module.exports = audiosConvertFromURLs

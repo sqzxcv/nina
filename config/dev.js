@@ -6,6 +6,7 @@ var config = {
     "dbuser": "root",
     "dbpwd": "Anhuiqiang851",
     "tdappid": "",
-    'newspaper':"http://localhost:8082/presedocument?url="//newspaper parse
+    'newspaper':"http://localhost:8082/presedocument?url=",//newspaper parse
+    'host' : "http://localhost:3000"
 };
 module.exports = config;

@@ -7,6 +7,7 @@ const audioConvertFromURLs = require("../src/brain/newspaper")
 var moment = require('moment');
 const util = require('util');
 const xmlparseString = util.promisify(require('xml2js').parseString)
+const config = require("../config")
 var wxbot = null;
 
 const handMsg = (bot) => {
@@ -46,7 +47,7 @@ const handMsg = (bot) => {
                         bot.sendMsg("收到" + links.length + "篇文章,正在转化为录音,请稍后~~", msg.FromUserName)
                         var mp3urls = await audioConvertFromURLs(links)
                         if (mp3urls.length != 0) {
-                            bot.sendMsg("音频文件地址:" + mp3urls, msg.FromUserName)
+                            sendMsg(bot, msg, mp3urls)
                         } else if (global.mutang.length != 0) {
                             bot.sendMsg("音频转换失败,失败的链接:" + links, global.mutang)
                         }
@@ -158,6 +159,7 @@ const handMsg = (bot) => {
                         var urls = result.msg.appmsg[0].url
                         bot.sendMsg("收到" + urls.length + "篇文章,正在转化为录音,请稍后~~", msg.FromUserName)
                         var mp3urls = await audioConvertFromURLs(urls)
+                        sendMsg(bot, msg, mp3urls)
                     } catch (error) {
                         console.error(error)
                         bot.sendMsg("获取转发的链接失败,")
@@ -177,8 +179,18 @@ const handMsg = (bot) => {
 module.exports = handMsg
 
 function pitchLinkFromContent(content) {
-    str = /(http:\/\/|https:\/\/|www)((\w|=|\?|\.|\/|&|-)+)/g
+    str = /(http:\/\/|https:\/\/|www)((\S)+)/g
     return content.match(str)
+}
+
+const sendMsg = (bot, msg, arr) => {
+    for (var key in arr) {
+        if (arr.hasOwnProperty(key)) {
+            var dict = arr[key];
+            url = config['host'] + "/audio?url=" + dict['audio'] + "&&title=" + encodeURI(dict['title'])
+            bot.sendMsg('音频地址:' + url, msg.FromUserName)
+        }
+    }
 }
 
 // content = "欢迎访问我的个人网站：http://www.zhangxinxu.com/欢迎访问我的个人网站：https://www.zhangxinxu.com/欢迎访问我的个人网站：www.zhangxinxu.com/";

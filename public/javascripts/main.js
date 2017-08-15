@@ -10,8 +10,8 @@ function getURLParam(name) {
 }
 
 window.onload = function () {
-  // info['audio']
-  $("#audioPlay1").attr("src", "../resources/test.mp3");
+  // 
+  $("#audioPlay1").attr("src", info['audio']);
   $("#audio_title_0").text(info['title']);
   var arr = info['url'].split('/');
   var source = ""

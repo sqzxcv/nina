@@ -46,7 +46,7 @@ function player() {
   var playIcon = document.getElementsByClassName('icon_audio_default')[0];
   var playingIcon = document.getElementsByClassName('icon_audio_playing')[0];
 
-  auto play
+  // auto play
   play();
   audioWrapper.addEventListener("click", function () {
     play();

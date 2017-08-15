@@ -21,7 +21,7 @@ router.get('/audio', async(ctx, next) => {
         host: config['dbhost'],
         user: config['dbuser'],
         password: config['dbpwd'],
-        database: "nina",
+        database: "Nina",
         connectionLimit: 100,
         port: "3306",
         waitForConnections: false

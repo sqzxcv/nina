@@ -68,10 +68,15 @@ const audiosConvertFromURLs = async(links) => {
         var element = mp3urls[index];
         // SELECT @@IDENTITY
         try {
-            var results = await connection.queryAsync(`insert into ugc_document(url,content,news_time,title,audio,isugc,collect_time)
+            var originRes = await connection.queryAsync(`select contentHtml from document where url='${element['url']}'`)
+            var contentHtml = ''
+            if (originRes.length != 0) {
+                contentHtml = originRes[0]['contentHtml']
+            }
+            var results = await connection.queryAsync(`insert into ugc_document(url,content,news_time,title,audio,isugc,collect_time,contentHtml)
              values('${element['url']}','${element['content']}',${moment(element['news_time']).unix()},
-            '${element['title']}','${element['audio']}',1,${moment().unix()}
-            ) ON DUPLICATE KEY UPDATE audio='${element['audio']}',collect_time=${moment().unix()}, isugc=1`)
+            '${element['title']}','${element['audio']}',1,${moment().unix()}, '${contentHtml}'
+            ) ON DUPLICATE KEY UPDATE audio='${element['audio']}',collect_time=${moment().unix()}, isugc=1, contentHtml='${contentHtml}'`)
             if (results.length != 0) {
                 audioids.push(results['insertId']);
             } else {

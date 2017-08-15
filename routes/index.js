@@ -28,10 +28,10 @@ router.get('/audio', async(ctx, next) => {
     });
     try {
         var connection = await pool.getConnectionAsync();
-        var results = await connection.queryAsync(`select * from ugc_document where doc_id=${ctx.query.id}`)
+        var results = await connection.queryAsync(`select url,title, contentHtml,audio from ugc_document where doc_id=${ctx.query.id}`)
         connection.release()
         if (results.length != 0) {
-            await ctx.render('nina_h5', {
+            await ctx.render('index', {
                 "info": JSON.stringify(results[0]),
                 "title": results[0]['title']
             });

@@ -1,0 +1,27 @@
+{{extend ("./layout/layout")}} {{#block ("head")}}
+<script type="text/javascript" src="nina_h5.hyperesources/script.js"></script>
+<link rel="stylesheet" type="text/css" href="nina_h5.hyperesources/style.css" />
+<script type="text/javascript" src="nina_h5.hyperesources/main.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/zepto/1.2.0/zepto.min.js"></script>Ï {{/block}} {{#block ("body")}}
+
+<audio preload="true" src="" id="audioPlay1">
+</audio>
+<!-- player style -->
+<div class=" audio_area" id="audioplayer">
+    <div class="audio_wrp" id="music" preload="true">
+        <div class="audio_play_area play " id="pButton ">
+            <i class="icon_audio_default "></i>
+            <i class="icon_audio_playing "></i>
+        </div>
+        <div class="audio_length tips_global " id="audio_length_0">00:00</div>
+        <div class="audio_info_area ">
+            <strong class="audio_title " id="audio_title_0">音频标题</strong>
+            <div class="audio_source tips_global " id="audio_source_0">音频来源</div>
+        </div>
+        <div id="timeline" class="progress_bar">
+            <div id="playhead"></div>
+        </div>
+    </div>
+</div>
+</audio>
+{{/block}}

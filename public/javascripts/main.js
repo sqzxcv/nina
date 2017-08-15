@@ -50,6 +50,7 @@ function player() {
   // setTimeout(function(){
   //   play();
   // }, 2000);
+
   audioWrapper.addEventListener("click", function () {
     play();
   }, false);
@@ -186,5 +187,13 @@ function player() {
     var second = date.getSeconds();
     return minite + ":" + second;
   }
+
+  function audioAutoPlay() {
+    play();
+    document.addEventListener("WeixinJSBridgeReady", function () {
+      audio.play();
+    }, false);
+  }
+  audioAutoPlay();
 
 };

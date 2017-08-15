@@ -15,7 +15,7 @@
   <div class='logo'>
     <img src="./images/logo-green.png">
   </div>
-  <audio preload="true" src="" id="audioPlay1" >
+  <audio preload="true" src="" id="audioPlay1">
   </audio>
   <!-- player style -->
   <div class=" audio_area" id="audioplayer">
@@ -23,6 +23,28 @@
       <div class="audio_play_area play " id="pButton ">
         <i class="icon_audio_default "></i>
         <i class="icon_audio_playing "></i>
+        <i>
+          <div class="spinner" id="audioloading">
+            <div class="spinner-container container1">
+              <div class="circle1"></div>
+              <div class="circle2"></div>
+              <div class="circle3"></div>
+              <div class="circle4"></div>
+            </div>
+            <div class="spinner-container container2">
+              <div class="circle1"></div>
+              <div class="circle2"></div>
+              <div class="circle3"></div>
+              <div class="circle4"></div>
+            </div>
+            <div class="spinner-container container3">
+              <div class="circle1"></div>
+              <div class="circle2"></div>
+              <div class="circle3"></div>
+              <div class="circle4"></div>
+            </div>
+          </div>
+        </i>
       </div>
       <div class="audio_length tips_global " id="audio_length_0">00:00</div>
       <div class="audio_info_area ">

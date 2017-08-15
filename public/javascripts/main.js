@@ -39,12 +39,15 @@ function player() {
   var playhead = document.getElementById('playhead');
   var timeline = document.getElementById('timeline');
   var playLength = document.getElementsByClassName('audio_length')[0];
+  var audioLoading = document.getElementById("audioloading");
   // timeline width adjusted for playhead
   timeline.style.width = audioWrapper.offsetWidth + "px";
   var timelineWidth = timeline.offsetWidth - playhead.offsetWidth;
   var playIcon = document.getElementsByClassName('icon_audio_default')[0];
   var playingIcon = document.getElementsByClassName('icon_audio_playing')[0];
 
+  auto play
+  play();
   audioWrapper.addEventListener("click", function () {
     play();
   }, false);
@@ -122,12 +125,41 @@ function player() {
       audio.play();
       // toggle icons display
       playIcon.style.display = "none";
-      playingIcon.style.display = "inline-block";
+      audioLoading.style.display = "inline-block"
+      playingIcon.style.display = "none";
     } else { // pause audio
       audio.pause();
-      playIcon.style.display = "inline-block";
-      playingIcon.style.display = "none";
+      // playIcon.style.display = "inline-block";
+      // playingIcon.style.display = "none";
     }
+  }
+
+  // audio.oncanplay = function () {
+  //   console.log("oncanplay")
+  //   if (audio.paused) {
+  //     playIcon.style.display = "none";
+  //     playingIcon.style.display = "none";
+  //     audioLoading.style.display = 'inline-block';
+  //   }
+  // }
+
+  // audio.onplay = function() {
+
+  //   console.log("onplay");
+  // }
+
+  audio.onplaying = function () {
+    console.log('onplaying')
+    playIcon.style.display = "none";
+    audioLoading.style.display = "none";
+    playingIcon.style.display = "inline-block";
+  }
+
+  audio.onpause = function () {
+    console.log("onpause")
+    playIcon.style.display = "inline-block";
+    audioLoading.style.display = "none";
+    playingIcon.style.display = "none";
   }
 
   // Gets audio file duration

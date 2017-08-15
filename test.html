@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>文字无缝滚动可添加多个DIV</title>
+<script>
+(function(ns){  
+        function Scroll(element){
+              
+            var content = document.createElement("div");
+            var container = document.createElement("div");
+            var _this =this;
+            var cssText = "position: absolute; visibility:hidden; left:0; white-space:nowrap;";
+            this.element = element; 
+            this.contentWidth = 0;
+            this.stop = false;
+              
+            content.innerHTML = element.innerHTML;
+              
+            //获取元素真实宽度
+            content.style.cssText = cssText;
+            element.appendChild(content);
+            this.contentWidth = content.offsetWidth;
+              
+            content.style.cssText= "float:left;";
+            container.style.cssText = "width: " + (this.contentWidth*2) + "px; overflow:hidden";
+            container.appendChild(content);
+            container.appendChild(content.cloneNode(true));
+            element.innerHTML = "";
+            element.appendChild(container);
+              
+            container.onmouseover = function(e){
+                clearInterval(_this.timer);
+                  
+            };
+              
+            container.onmouseout = function(e){
+                _this.timer = setInterval(function(){ 
+                    _this.run();
+                },20);          
+  
+                  
+            };
+            _this.timer = setInterval(function(){ 
+                _this.run();
+            }, 20);
+        }
+          
+        Scroll.prototype = {
+              
+            run: function(){
+                  
+                var _this = this;
+                var element = _this.element;
+                  
+                element.scrollLeft = element.scrollLeft + 1;
+                  
+                if(element.scrollLeft >=  this.contentWidth ) {
+                        element.scrollLeft = 0;
+                }
+            }
+        };
+    ns.Scroll = Scroll; 
+}(window));
+window.onload=function(){
+	var sc = new Scroll(document.getElementById("scroll"));
+	var sc = new Scroll(document.getElementById("scroll2"));
+}
+</script>
+</head>
+
+<body>
+<div id="scroll" style="width:500px;border:1px solid #f60;color:red;overflow:hidden;">文字无缝滚动效果文字无缝滚动效果文字无缝滚动效果文字无缝滚动效果</div>
+<br />
+<div id="scroll2" style="width:500px;overflow:hidden;">文字无缝滚动效果文字无缝滚动效果文字无缝滚动效果文字无缝滚动效果</div>
+</body>
+</html>

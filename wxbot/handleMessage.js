@@ -186,8 +186,9 @@ function pitchLinkFromContent(content) {
 const sendMsg = (bot, msg, arr) => {
     for (var key in arr) {
         if (arr.hasOwnProperty(key)) {
-            var dict = arr[key];
-            url = config['host'] + "/audio?url=" + dict['audio'] + "&&title=" + encodeURI(dict['title'])
+            // var dict = arr[key];
+            // url = config['host'] + "/audio?url=" + dict['audio'] + "&&title=" + encodeURI(dict['title'])
+            url = config['host'] + "/audio?id=" +arr[key]
             bot.sendMsg('音频地址:' + url, msg.FromUserName)
         }
     }

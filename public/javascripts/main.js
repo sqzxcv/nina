@@ -47,7 +47,9 @@ function player() {
   var playingIcon = document.getElementsByClassName('icon_audio_playing')[0];
 
   // auto play
-  play();
+  // setTimeout(function(){
+  //   play();
+  // }, 2000);
   audioWrapper.addEventListener("click", function () {
     play();
   }, false);

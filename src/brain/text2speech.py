@@ -52,7 +52,7 @@ def text2speech(text):
             access_token + "&ctp=1&cuid=aaaaaaaaaaaa&tex="
         # silenceAudio = AudioSegment.silent(duration=10000)
         song = None
-        dir = "./ttsdata/"
+        dir = "./ttsdata/ttsdata" + str(int(time.time() * 100000000000000)) + "/"
         if os.path.isdir(dir) == False:
             os.mkdir(dir)
         textfilepath = dir + str(int(time.time()))
@@ -79,11 +79,12 @@ def text2speech(text):
                     song = songtmp
                 mp3fileobj.close()
             else:
-                print("text<"+ str(i) + "span convert to audio failed,because:" + res.text())
+                print("text span convert to audio failed,because:" + res.text())
+                print("error substr:" + substr)
                 return None
             print ("gen MP3 file:" + str(i) + "span")
             i += 1
-        resultPath = "./ttsdata/res_" + str(int(time.time())) + ".mp3"
+        resultPath = dir + "/res_" + str(int(time.time())) + ".mp3"
         song.export(resultPath, format="mp3")
         print ("gen audio success")
         uploadPath = uploadspeech(resultPath)

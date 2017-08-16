@@ -9,6 +9,7 @@ const mysql = require('mysql')
 bluebird.promisifyAll(require("mysql/lib/Connection").prototype);
 bluebird.promisifyAll(require("mysql/lib/Pool").prototype);
 const moment = require("moment")
+const sqlStringM = require('sqlstring')
 
 
 var retryCount = 0
@@ -60,7 +61,7 @@ const audiosConvertFromURLs = async(links) => {
     }
     var audioids = []
     try {
-        var connection = await pool.getConnectionAsync();        
+        var connection = await pool.getConnectionAsync();
     } catch (error) {
         console.error(error)
     }
@@ -68,10 +69,23 @@ const audiosConvertFromURLs = async(links) => {
         var element = mp3urls[index];
         // SELECT @@IDENTITY
         try {
-            var results = await connection.queryAsync(`insert into ugc_document(url,content,news_time,title,audio,isugc,collect_time,contentHtml)
-             values('${element['url']}','${element['content']}',${moment(element['news_time']).unix()},
-            '${element['title']}','${element['audio']}',1,${moment().unix()}, '${element['contentHtml']}'
-            ) ON DUPLICATE KEY UPDATE audio='${element['audio']}',collect_time=${moment().unix()}, isugc=1, contentHtml='${element['contentHtml']}'`)
+            var content = sqlStringM.escape(element['content'])
+            var title = sqlStringM.escape(element['title'])
+            var contentHtml = sqlStringM.escape(element['contentHtml'])
+            // var results = await connection.queryAsync(`insert into ugc_document(url,content,news_time,title,audio,isugc,collect_time,contentHtml)
+            //  values('${element['url']}','${content}',${moment(element['news_time']).unix()},
+            // '${title}','${element['audio']}',1,${moment().unix()}, '${contentHtml}'
+            // ) ON DUPLICATE KEY UPDATE audio='${element['audio']}',collect_time=${moment().unix()}, isugc=1, contentHtml='${contentHtml}',
+            // content='${content}',title='${title}'`)
+            var sql = `insert into ugc_document(url,content,news_time,title,audio,isugc,collect_time,contentHtml)
+            values('${element['url']}',${content},${moment(element['news_time']).unix()},
+            ${title},'${element['audio']}',1,${moment().unix()}, ${contentHtml}) 
+            ON DUPLICATE KEY UPDATE audio='${element['audio']}',collect_time=${moment().unix()}, isugc=1, contentHtml=${contentHtml},
+            content=${content},title=${title}`
+            //sqlStringM.format(`insert into ugc_document set=? EY UPDATE audio='${element['audio']}',collect_time=${moment().unix()}, isugc=1, contentHtml='${contentHtml}',
+            // content='${content}',title='${title}'`,element)
+            // sql = sqlStringM.escape(sql)
+            var results = await connection.queryAsync(sql)
             if (results.length != 0) {
                 audioids.push(results['insertId']);
             } else {
@@ -81,7 +95,7 @@ const audiosConvertFromURLs = async(links) => {
             console.error(error);
             continue;
         }
-        
+
     }
     connection.release()
 

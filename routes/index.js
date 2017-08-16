@@ -4,6 +4,7 @@ const bluebird = require('bluebird')
 const mysql = bluebird.promisifyAll(require('mysql'))
 const config = require("../config")
 var brain = new Brain();
+const sqlStringM = require('sqlstring')
 
 router.get('/', async(ctx, next) => {
 
@@ -31,6 +32,7 @@ router.get('/audio', async(ctx, next) => {
         var results = await connection.queryAsync(`select url,title, contentHtml,audio from ugc_document where doc_id=${ctx.query.id}`)
         connection.release()
         if (results.length != 0) {
+            // results['contentHtml'] = sqlStringM.escapeString(results['contentHtml'])
             await ctx.render('index', {
                 "info": JSON.stringify(results[0]),
                 "title": results[0]['title']

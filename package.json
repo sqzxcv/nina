@@ -33,6 +33,7 @@
     "pug": "^2.0.0-rc.1",
     "qrcode-terminal": "^0.11.0",
     "request": "^2.81.0",
+    "sqlstring": "^2.2.0",
     "util": "^0.10.3",
     "wechat4u": "^0.7.6",
     "xml2js": "^0.4.17",

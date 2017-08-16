@@ -4,6 +4,12 @@ body {
 
 img {
   max-width: 100%;
+  text-align: center;
+  display: block;
+}
+
+span{
+  text-align: center;
 }
 
 .logo {

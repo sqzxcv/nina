@@ -25,7 +25,8 @@ window.onload = function () {
   player();
 
   // $('#content').text(info['content'])
-  $('#content').append(info['contentHtml'])
+  contentHtml = info['contentHtml'].replace(/style="([^"]+)"/g, "")
+  $('#content').append(contentHtml)
 }
 
 function player() {

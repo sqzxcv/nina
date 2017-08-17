@@ -41,7 +41,7 @@ const handMsg = (bot) => {
                         bot.sendMsg(msg.Content, global.waitMsgUser);
                     }
                 } else {
-                    links = pitchLinkFromContent(msg.Content)
+                    var links = pitchLinkFromContent(msg.Content)
                     if (links != null && links.length != 0) {
 
                         bot.sendMsg("收到" + links.length + "篇文章,正在转化为录音,请稍后~~", msg.FromUserName)

@@ -211,7 +211,7 @@ const uploadspeech = async(key, buffer) => {
 
 const login = async() => {
 
-    if (expires_date > moment().unix() && length(access_token) > 0) {
+    if (expires_date > moment().unix() && access_token.length > 0) {
 
         return access_token
     }

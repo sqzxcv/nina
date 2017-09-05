@@ -3,6 +3,7 @@ const Brain = require('../src/brain');
 const bluebird = require('bluebird')
 const mysql = bluebird.promisifyAll(require('mysql'))
 const config = require("../config")
+const tingnewsRes = require("./responser/tingnews")
 var brain = new Brain();
 const sqlStringM = require('sqlstring')
 
@@ -45,9 +46,25 @@ router.get('/audio', async(ctx, next) => {
     }
 })
 
-router.get('/json', async(ctx, next) => {
-    ctx.body = {
-        title: 'koa2 json'
+router.get('/news', async(ctx, next) => {
+
+    var startid = ctx.query.minid
+    var pagecount = 10
+    if (startid === undefined) {
+        startid = 0
+    } 
+    try {
+        var results = await tingnewsRes(startid - 1, pagecount);
+
+        if (ctx.query.minid === undefined) {
+            await ctx.render('tingNews', {
+                "title": "听天下"
+            });
+        } else {
+            ctx.body = JSON.stringify(results)
+        }
+    } catch (error) {
+        console.error(error)
     }
 })
 

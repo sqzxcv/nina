@@ -1,4 +1,3 @@
-
 const config = require('../../config')
 const bluebird = require('bluebird')
 const mysql = require('mysql')
@@ -21,18 +20,17 @@ const tingnewsResponse = async(startid, count) => {
     } catch (error) {
         console.error(error)
     }
-    var sql  = ""
-    if( startid <= 0) {
+    var sql = ""
+    if (startid <= 0) {
         sql = "select * from document where audio is not NULL and news_time != 0  order by doc_id desc limit " + count + ";"
     } else {
-        sql  = "select * from document where doc_id <" + startid +" and audio is not NULL and news_time != 0 limit " + count + " order by doc_id desc;"        
+        sql = "select * from document where doc_id <" + startid + " and audio is not NULL and news_time != 0 order by doc_id desc limit " + count + ";"
     }
     var results = await connection.queryAsync(sql)
-    if (results.length != 0) {
-        return results
-    } else {
-        console.warning("没有查询到数据")
-    }
+    if (results.length == 0) {
+        console.warn("没有查询到数据")
+    } 
+    return results
 }
 
 module.exports = tingnewsResponse

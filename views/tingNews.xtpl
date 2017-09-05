@@ -3,10 +3,10 @@
 {{#block ("head")}}
 <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="stylesheets/tingnews.css" />
-    <script type="text/javascript" src="javascripts/main.js"></script>
+    <script type="text/javascript" src="javascripts/tingnews.js"></script>
     <script type ="text/javascript" src="https://cdn.staticfile.org/zepto/1.2.0/zepto.min.js"></script>
     <script type ="text/javascript">
-
+    results = {{{results}}}
 
     </script>
 
@@ -21,78 +21,6 @@
     <!-- player style -->
     <div class=" audio_area" id="audioplayer">
         <div class="audiolist" id = "audiolist">
-            <div class="audio_wrp" id="music0" preload="true">
-                <div class="audio_play_area play " id="pButton ">
-                    <i class="icon_audio_default "></i>
-                    <i class="icon_audio_playing "></i>
-                    <i>
-                        <div class="spinner" id="audioloading">
-                            <div class="spinner-container container1">
-                                <div class="circle1"></div>
-                                <div class="circle2"></div>
-                                <div class="circle3"></div>
-                                <div class="circle4"></div>
-                            </div>
-                            <div class="spinner-container container2">
-                                <div class="circle1"></div>
-                                <div class="circle2"></div>
-                                <div class="circle3"></div>
-                                <div class="circle4"></div>
-                            </div>
-                            <div class="spinner-container container3">
-                                <div class="circle1"></div>
-                                <div class="circle2"></div>
-                                <div class="circle3"></div>
-                                <div class="circle4"></div>
-                            </div>
-                        </div>
-                    </i>
-                </div>
-                <div class="audio_length tips_global " id="audio_length_0">00:00</div>
-                <div class="audio_info_area ">
-                    <strong class="audio_title " id="audio_title_0">音频标题</strong>
-                    <div class="audio_source tips_global " id="audio_source_0">音频来源</div>
-                </div>
-                <div id="timeline" class="progress_bar">
-                    <div id="playhead"></div>
-                </div>
-            </div>
-            <div class="audio_wrp" id="music0" preload="true">
-                <div class="audio_play_area play " id="pButton ">
-                    <i class="icon_audio_default "></i>
-                    <i class="icon_audio_playing "></i>
-                    <i>
-                        <div class="spinner" id="audioloading">
-                            <div class="spinner-container container1">
-                                <div class="circle1"></div>
-                                <div class="circle2"></div>
-                                <div class="circle3"></div>
-                                <div class="circle4"></div>
-                            </div>
-                            <div class="spinner-container container2">
-                                <div class="circle1"></div>
-                                <div class="circle2"></div>
-                                <div class="circle3"></div>
-                                <div class="circle4"></div>
-                            </div>
-                            <div class="spinner-container container3">
-                                <div class="circle1"></div>
-                                <div class="circle2"></div>
-                                <div class="circle3"></div>
-                                <div class="circle4"></div>
-                            </div>
-                        </div>
-                    </i>
-                </div>
-                <div class="audio_length tips_global " id="audio_length_0">00:00</div>
-                <div class="audio_info_area ">
-                    <strong class="audio_title " id="audio_title_0">音频标题</strong>
-                    <div class="audio_source tips_global " id="audio_source_0">音频来源</div>
-                </div>
-                <div id="timeline" class="progress_bar">
-                    <div id="playhead"></div>
-                </div>
-            </div>
         </div>
     </div>
     <div class="content" id="content"> 

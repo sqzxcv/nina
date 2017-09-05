@@ -52,17 +52,29 @@ router.get('/news', async(ctx, next) => {
     var pagecount = 10
     if (startid === undefined) {
         startid = 0
-    } 
+    }
     try {
         var results = await tingnewsRes(startid - 1, pagecount);
+        await ctx.render('tingnews', {
+            "title": "听天下",
+            "results": JSON.stringify(results)
+        });
 
-        if (ctx.query.minid === undefined) {
-            await ctx.render('tingNews', {
-                "title": "听天下"
-            });
-        } else {
-            ctx.body = JSON.stringify(results)
-        }
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+router.get('/api/news', async(ctx, next) => {
+
+    var startid = ctx.query.maxid
+    var pagecount = 10
+    if (startid === undefined) {
+        startid = 0
+    }
+    try {
+        var results = await tingnewsRes(startid - 1, pagecount);
+        ctx.body = JSON.stringify(results)
     } catch (error) {
         console.error(error)
     }

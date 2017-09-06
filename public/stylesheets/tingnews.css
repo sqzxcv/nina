@@ -26,7 +26,7 @@ span {
     word-wrap: break-word;
 }
 
-.audio_area #playhead {
+.audio_area .playhead {
     width: 2px;
     height: 2px;
     background-color: #0CBB08;

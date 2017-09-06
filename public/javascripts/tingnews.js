@@ -31,7 +31,7 @@ var songmodel = `<div class="audio_wrp" id="music{{index}}" preload="true" docid
     <div class="audio_source tips_global " id="audio_source{{index}}">{{audiosource}}</div>
 </div>
 <div id="timeline{{index}}" class="progress_bar">
-    <div id="playhead{{index}}"></div>
+    <div id="playhead{{index}}" class="playhead"></div>
 </div>
 </div>`
 
@@ -46,6 +46,7 @@ var playLength
 var playhead, timelineWidth, playIcon, playingIcon;
 var audioPlayingId;
 var audioLoading;
+var timeline;
 function initPlayer(newAudioInfo, isAutoPlay) {
 
     if (newAudioInfo.length == 0) {
@@ -63,8 +64,8 @@ function initPlayer(newAudioInfo, isAutoPlay) {
         var element = newAudioInfo[index];
         var audioWrapper = document.getElementById('music' + element.doc_id);
         var playheadd = document.getElementById('playhead' + element.doc_id);
-        var timeline = document.getElementById('timeline' + element.doc_id);
-        timeline.style.width = audioWrapper.offsetWidth + "px";
+        var currenttimeline = document.getElementById('timeline' + element.doc_id);
+        currenttimeline.style.width = audioWrapper.offsetWidth + "px";
         audioWrapper.addEventListener("click", function (event) {
 
             var docId = $("#"+event.currentTarget.id).attr("docid")
@@ -76,11 +77,15 @@ function initPlayer(newAudioInfo, isAutoPlay) {
      function play(audioid) {
         // start audio
         if (audio.paused) {
+            //将开始播放新的音频,之前的音频隐藏
+            if (timeline !== undefined) {
+                timeline.style.display = "none"
+            }
              //初始化播放数据
             playLength = document.getElementById("audio_length" + audioid)
             playhead = document.getElementById('playhead' + audioid)
-            var currenttimeline = document.getElementById('timeline' + audioid);
-            timelineWidth = timeline.offsetWidth - playhead.offsetWidth;
+            timeline = document.getElementById('timeline' + audioid);
+            timelineWidth = $('#timeline' + audioid).width() - $('#playhead' + audioid).width();
             playIcon = document.getElementById("icon_audio_default" + audioid)
             playingIcon = document.getElementById("icon_audio_playing" + audioid)
             audioLoading = document.getElementById("audioloading" + audioid);
@@ -91,6 +96,7 @@ function initPlayer(newAudioInfo, isAutoPlay) {
             playIcon.style.display = "none";
             audioLoading.style.display = "inline-block"
             playingIcon.style.display = "none";
+            timeline.style.display = "block"
             audioPlayingId = audioid
         } else { // pause audio
             if (audioPlayingId == audioid) {
@@ -100,21 +106,24 @@ function initPlayer(newAudioInfo, isAutoPlay) {
                 playIcon.style.display = "inline-block";
                 audioLoading.style.display = "none";
                 playingIcon.style.display = "none";
+                timeline.style.display = "none";
 
             //初始化新的播放数据
             playLength = document.getElementById("audio_length" + audioid)
             playhead = document.getElementById('playhead' + audioid)
-            var currenttimeline = document.getElementById('timeline' + audioid);
-            timelineWidth = timeline.offsetWidth - playhead.offsetWidth;
+            timeline = document.getElementById('timeline' + audioid);
+            timelineWidth = $('#timeline' + audioid).width() - $('#playhead' + audioid).width();
             playIcon = document.getElementById("icon_audio_default" + audioid)
             playingIcon = document.getElementById("icon_audio_playing" + audioid)
             audioLoading = document.getElementById("audioloading" + audioid);
+            timeline = document.getElementById('timeline' + audioid);
             $("#audioPlay1").attr("src", $("#music"+audioid).attr("audio"));
             audio.play();
             // toggle icons display
             playIcon.style.display = "none";
             audioLoading.style.display = "inline-block"
             playingIcon.style.display = "none";
+            timeline.style.display = "block"
             audioPlayingId = audioid
             }
         }

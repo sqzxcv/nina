@@ -50,8 +50,8 @@ div.audio_wrp {
     border: 1px solid #ebebeb;
     background-color: #fcfcfc;
     overflow: hidden;
-    padding: 12px 20px 12px 12px;
-    max-width: 85%;
+    padding: 12px 5px 12px 5px;
+    max-width: 94%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 10px;
@@ -59,10 +59,11 @@ div.audio_wrp {
 
 .audio_play_area {
     float: left;
-    margin: 9px 22px 10px 5px;
+    margin: 20px 15px auto 5px;
     font-size: 0;
     width: 18px;
     height: 25px;
+
 }
 
 .audio_area .pic_audio_default {
@@ -71,10 +72,13 @@ div.audio_wrp {
 }
 
 .audio_area .audio_length {
-    float: right;
+    /* float: right; */
     font-size: 14px;
     margin-top: 3px;
-    margin-left: 1em;
+    /* margin-left: 1em; */
+    margin-top: -21px;
+    margin-right: 6px;
+    text-align: right;
 }
 
 .audio_info_area {
@@ -88,12 +92,14 @@ div.audio_wrp {
     width: auto;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    word-wrap: normal;
+    word-wrap:break-word;
+    height: 44px;
+    line-height: 24px;
 }
 
 .audio_area .audio_source {
     font-size: 14px;
+    margin-top: 3px;
 }
 
 .tips_global {
@@ -103,7 +109,7 @@ div.audio_wrp {
 .audio_area .progress_bar {
     /* position: absolute; */
     position: relative;
-    left: -12px;
+    left: -6px;
     bottom: -12px;
     background-color: #eee;
     height: 2px;

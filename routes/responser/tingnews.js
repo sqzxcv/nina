@@ -30,6 +30,7 @@ const tingnewsResponse = async(startid, count) => {
     if (results.length == 0) {
         console.warn("没有查询到数据")
     } 
+    await connection.release();
     return results
 }
 

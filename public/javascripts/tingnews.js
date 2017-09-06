@@ -38,119 +38,102 @@ var songmodel = `<div class="audio_wrp" id="music{{index}}" preload="true" docid
 window.onload = function () {
     var dom = songdom(results)
     $("#audiolist").append(dom)
+    initPlayer(results, true)
 }
 
-function initPlayer(newAudioInfo) {
+var duration; // Duration of audio clip
+var playLength 
+var playhead, timelineWidth, playIcon, playingIcon;
+var audioPlayingId;
+var audioLoading;
+function initPlayer(newAudioInfo, isAutoPlay) {
+
+    if (newAudioInfo.length == 0) {
+        return
+    }
 
     var audio = document.getElementsByTagName('audio')[0]; // id for audio element
     // var audioWrapper = document.getElementById('music'); // audio interface
-    
-    var duration; // Duration of audio clip
-    var pButton = document.getElementById('pButton'); // play button
-
-    var playhead = document.getElementById('playhead');
-;
-    var playIcon = document.getElementsByClassName('icon_audio_default')[0];
-    var playingIcon = document.getElementsByClassName('icon_audio_playing')[0];
 
     // auto play
     // setTimeout(function(){
     //     play();
     // }, 2000);
-    var audioWrappers = document.getElementsByClassName("audio_wrp_nina");
     for (var index = 0; index < newAudioInfo.length; index++) {
         var element = newAudioInfo[index];
         var audioWrapper = document.getElementById('music' + element.doc_id);
-        var timeline = document.getElementById('timeline');
-        var playLength = document.getElementsByClassName('audio_length')[0];
-        var audioLoading = document.getElementById("audioloading");
-        // timeline width adjusted for playhead
+        var playheadd = document.getElementById('playhead' + element.doc_id);
+        var timeline = document.getElementById('timeline' + element.doc_id);
         timeline.style.width = audioWrapper.offsetWidth + "px";
-        var timelineWidth = timeline.offsetWidth - playhead.offsetWidth
-        audioWrapper.addEventListener("click", function () {
-            play();
+        audioWrapper.addEventListener("click", function (event) {
+
+            var docId = $("#"+event.currentTarget.id).attr("docid")
+            play(docId);
         }, false);
     }
 
-    // timeupdate event listener
-    audio.addEventListener("timeupdate", timeUpdate, false);
-
-    //Makes timeline clickable
-    timeline.addEventListener("click", function (event) {
-        // moveplayhead(event);
-        // audio.currentTime = duration * clickPercent(event);
-    }, false);
-
-    // returns click as decimal (.77) of the total timelineWidth
-    function clickPercent(e) {
-        return (e.pageX - timeline.offsetLeft) / timelineWidth;
-    }
-
-    // Makes playhead draggable
-    playhead.addEventListener('mousedown', mouseDown, false);
-    window.addEventListener('mouseup', mouseUp, false);
-
-    // Boolean value so that mouse is moved on mouseUp only when the playhead is released
-    var onplayhead = false;
-    // mouseDown EventListener
-    function mouseDown() {
-        onplayhead = true;
-        window.addEventListener('mousemove', moveplayhead, true);
-        audio.removeEventListener('timeupdate', timeUpdate, false);
-    }
-
-    // mouseUp EventListener
-    // getting input from all mouse clicks
-    function mouseUp(e) {
-        if (onplayhead === true) {
-            moveplayhead(e);
-            window.removeEventListener('mousemove', moveplayhead, true);
-            // change current time
-            audio.currentTime = duration * clickPercent(e);
-            audio.addEventListener('timeupdate', timeUpdate, false);
-        }
-        onplayhead = false;
-    }
-
-    // mousemove EventListener
-    // Moves playhead as user drags
-    function moveplayhead(e) {
-        var newMargLeft = e.pageX - timeline.offsetLeft;
-        if (newMargLeft >= 0 && newMargLeft <= timelineWidth) {
-            playhead.style.marginLeft = newMargLeft + "px";
-        }
-        if (newMargLeft < 0) {
-            playhead.style.marginLeft = "0px";
-        }
-        if (newMargLeft > timelineWidth) {
-            playhead.style.marginLeft = timelineWidth + "px";
-        }
-    }
-
-    // timeUpdate
-    // Synchronizes playhead position with current point in audio
-    function timeUpdate() {
-        var playPercent = timelineWidth * (audio.currentTime / duration);
-        playhead.style.width = playPercent + "px";
-        if (audio.currentTime == duration) {
-            playIcon.style.display = "inline-block";
-            playingIcon.style.display = "none";
-        }
-    }
-
-    //Play and Pause
-    function play() {
+     //Play and Pause
+     function play(audioid) {
         // start audio
         if (audio.paused) {
+             //初始化播放数据
+            playLength = document.getElementById("audio_length" + audioid)
+            playhead = document.getElementById('playhead' + audioid)
+            var currenttimeline = document.getElementById('timeline' + audioid);
+            timelineWidth = timeline.offsetWidth - playhead.offsetWidth;
+            playIcon = document.getElementById("icon_audio_default" + audioid)
+            playingIcon = document.getElementById("icon_audio_playing" + audioid)
+            audioLoading = document.getElementById("audioloading" + audioid);
+            $("#audioPlay1").attr("src", $("#music"+audioid).attr("audio"));
+
             audio.play();
             // toggle icons display
             playIcon.style.display = "none";
             audioLoading.style.display = "inline-block"
             playingIcon.style.display = "none";
+            audioPlayingId = audioid
         } else { // pause audio
-            audio.pause();
-            // playIcon.style.display = "inline-block";
-            // playingIcon.style.display = "none";
+            if (audioPlayingId == audioid) {
+                audio.pause()
+            } else {
+                audio.pause()
+                playIcon.style.display = "inline-block";
+                audioLoading.style.display = "none";
+                playingIcon.style.display = "none";
+
+            //初始化新的播放数据
+            playLength = document.getElementById("audio_length" + audioid)
+            playhead = document.getElementById('playhead' + audioid)
+            var currenttimeline = document.getElementById('timeline' + audioid);
+            timelineWidth = timeline.offsetWidth - playhead.offsetWidth;
+            playIcon = document.getElementById("icon_audio_default" + audioid)
+            playingIcon = document.getElementById("icon_audio_playing" + audioid)
+            audioLoading = document.getElementById("audioloading" + audioid);
+            $("#audioPlay1").attr("src", $("#music"+audioid).attr("audio"));
+            audio.play();
+            // toggle icons display
+            playIcon.style.display = "none";
+            audioLoading.style.display = "inline-block"
+            playingIcon.style.display = "none";
+            audioPlayingId = audioid
+            }
+        }
+    }
+
+    // timeupdate event listener
+    audio.addEventListener("timeupdate", timeUpdate, false);
+
+    // timeUpdate
+    // Synchronizes playhead position with current point in audio
+    function timeUpdate() {
+        if (audioPlayingId === undefined) {
+            return
+        }
+        var playPercent = timelineWidth * (audio.currentTime / duration);
+        playhead.style.width = playPercent + "px";
+        if (audio.currentTime == duration) {
+            playIcon.style.display = "inline-block";
+            playingIcon.style.display = "none";
         }
     }
 
@@ -191,13 +174,17 @@ function initPlayer(newAudioInfo) {
         return minite + ":" + second;
     }
 
-    function audioAutoPlay() {
-        play();
+    function audioAutoPlay(docid) {
+        play(docid);
         document.addEventListener("WeixinJSBridgeReady", function () {
-            audio.play();
+            audio.play(docid);
         }, false);
     }
-    audioAutoPlay();
+
+    if (isAutoPlay) {
+        var docid = newAudioInfo[0].doc_id
+        audioAutoPlay(docid);
+    }
 
 };
 
@@ -259,6 +246,7 @@ function fetchNewsData() {
             newResults = JSON.parse(data)
             var dom = songdom(newResults)
             $("#audiolist").append(dom)
+            initPlayer(newResults,  false)
         },
         error: function (xhr, errorType, error) {
 

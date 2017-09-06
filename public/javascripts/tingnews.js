@@ -44,11 +44,12 @@ window.onload = function () {
 }
 
 var duration; // Duration of audio clip
-var playLength 
+var playLength
 var playhead, timelineWidth, unPlayIcon, playingIcon;
 var audioPlayingId;
 var audioLoading;
 var timeline;
+
 function initPlayer(newAudioInfo, isAutoPlay) {
 
     if (newAudioInfo.length == 0) {
@@ -61,20 +62,20 @@ function initPlayer(newAudioInfo, isAutoPlay) {
         var currenttimeline = document.getElementById('timeline' + element.doc_id);
         currenttimeline.style.width = audioWrapper.offsetWidth + "px";
         audioWrapper.addEventListener("click", function (event) {
-            var docId = $("#"+event.currentTarget.id).attr("docid")
+            var docId = $("#" + event.currentTarget.id).attr("docid")
             play(docId);
         }, false);
     }
 
-     //Play and Pause
-     function play(audioid) {
+    //Play and Pause
+    function play(audioid) {
         // start audio
         if (audio.paused) {
             //将开始播放新的音频,之前的音频隐藏
             if (timeline !== undefined) {
                 timeline.style.display = "none"
             }
-             //初始化播放数据
+            //初始化播放数据
             playLength = document.getElementById("audio_length" + audioid)
             playhead = document.getElementById('playhead' + audioid)
             timeline = document.getElementById('timeline' + audioid);
@@ -82,7 +83,7 @@ function initPlayer(newAudioInfo, isAutoPlay) {
             unPlayIcon = document.getElementById("icon_audio_default" + audioid)
             playingIcon = document.getElementById("icon_audio_playing" + audioid)
             audioLoading = document.getElementById("audioloading" + audioid);
-            $("#audioPlay1").attr("src", $("#music"+audioid).attr("audio"));
+            $("#audioPlay1").attr("src", $("#music" + audioid).attr("audio"));
 
             audio.play();
             // toggle icons display
@@ -108,26 +109,26 @@ function initPlayer(newAudioInfo, isAutoPlay) {
                 timeline.style.display = "none";
 
 
-            //初始化新的播放数据
-            playLength = document.getElementById("audio_length" + audioid)
-            playhead = document.getElementById('playhead' + audioid)
-            timeline = document.getElementById('timeline' + audioid);
-            timelineWidth = $('#timeline' + audioid).width() - $('#playhead' + audioid).width();
-            unPlayIcon = document.getElementById("icon_audio_default" + audioid)
-            playingIcon = document.getElementById("icon_audio_playing" + audioid)
-            audioLoading = document.getElementById("audioloading" + audioid);
-            timeline = document.getElementById('timeline' + audioid);
-            $("#audioPlay1").attr("src", $("#music"+audioid).attr("audio"));
-            audio.play();
-            // toggle icons display
-            unPlayIcon.style.display = "none";
-            audioLoading.style.display = "inline-block"
-            playingIcon.style.display = "none";
-            timeline.style.display = "block"
-            $("#icon_audio_didplay" + audioid).css("display", "none")
-            $('#newstime' + audioid).css("display", "none");
-            $("#audio_length" + audioid).css("display", "block");
-            audioPlayingId = audioid
+                //初始化新的播放数据
+                playLength = document.getElementById("audio_length" + audioid)
+                playhead = document.getElementById('playhead' + audioid)
+                timeline = document.getElementById('timeline' + audioid);
+                timelineWidth = $('#timeline' + audioid).width() - $('#playhead' + audioid).width();
+                unPlayIcon = document.getElementById("icon_audio_default" + audioid)
+                playingIcon = document.getElementById("icon_audio_playing" + audioid)
+                audioLoading = document.getElementById("audioloading" + audioid);
+                timeline = document.getElementById('timeline' + audioid);
+                $("#audioPlay1").attr("src", $("#music" + audioid).attr("audio"));
+                audio.play();
+                // toggle icons display
+                unPlayIcon.style.display = "none";
+                audioLoading.style.display = "inline-block"
+                playingIcon.style.display = "none";
+                timeline.style.display = "block"
+                $("#icon_audio_didplay" + audioid).css("display", "none")
+                $('#newstime' + audioid).css("display", "none");
+                $("#audio_length" + audioid).css("display", "block");
+                audioPlayingId = audioid
             }
         }
     }
@@ -181,14 +182,20 @@ function initPlayer(newAudioInfo, isAutoPlay) {
         unPlayIcon.style.display = "none";
         playingIcon.style.display = "none";
         $("#icon_audio_didplay" + audioPlayingId).css("display", "inline-block")
+        var nextid = findNextAudio(false);
+        if (nextid) {
+            play(nextid)
+        }
     }, false);
 
-    function add0(m){return m<10?'0'+m:m }
+    function add0(m) {
+        return m < 10 ? '0' + m : m
+    }
 
     function timeFormat(timestamp) {
         var date = new Date(parseInt(timestamp * 1000));
         var tamp = parseInt(timestamp);
-        return add0(parseInt(tamp/60)) + ":" + add0( tamp%60);
+        return add0(parseInt(tamp / 60)) + ":" + add0(tamp % 60);
     }
 
     function audioAutoPlay(docid) {
@@ -204,6 +211,32 @@ function initPlayer(newAudioInfo, isAutoPlay) {
     }
 
 };
+
+function findNextAudio(didSkipReaded) {
+
+    if (audioPlayingId !== undefined) {
+        var didFindCurrent = false
+        var nextElement = null
+        for (var index = 0; index < results.length; index++) {
+            var element = results[index];
+            if (didFindCurrent && element.doc_id != audioPlayingId) {
+                nextElement = element
+                if(index < results.length - 3 && fetchdataing == false) {
+                    //将播放倒数第三个,自动请求新数据
+                    fetchNewsData()
+                }
+                break
+            }
+            if (element.doc_id == audioPlayingId) {
+                didFindCurrent = true
+            }
+        }
+        return nextElement.doc_id
+    } else {
+        alert("audioPlayingId = undefined")
+        return null
+    }
+}
 
 var minid = 0
 
@@ -263,7 +296,8 @@ function fetchNewsData() {
             newResults = JSON.parse(data)
             var dom = songdom(newResults)
             $("#audiolist").append(dom)
-            initPlayer(newResults,  false)
+            results = results.concat(newResults)
+            initPlayer(newResults, false)
         },
         error: function (xhr, errorType, error) {
 

@@ -122,31 +122,31 @@ div.audio_wrp {
 
 .audio_play_area .icon_audio_default {
     background: transparent url(../images/icon_audio_unread26f1f1.png) no-repeat 0 0;
-    width: 18px;
-    height: 25px;
+    width: 14px;
+    height: 20px;
     vertical-align: middle;
     display: inline-block;
-    -webkit-background-size: 18px auto;
-    background-size: 18px auto;
+    -webkit-background-size: 14px auto;
+    background-size: 14px auto;
 }
 
 .audio_play_area .icon_audio_didplay {
     background: transparent url(../images/icon_audio_didread26f1f1.png) no-repeat 0 0;
-    width: 18px;
-    height: 25px;
+    width: 14px;
+    height: 20px;
     vertical-align: middle;
     display: none;
-    -webkit-background-size: 18px auto;
-    background-size: 18px auto;
+    -webkit-background-size: 14px auto;
+    background-size: 14px auto;
 }
 
 .audio_play_area .icon_audio_playing {
     background: transparent url(../images/icon_audio_reading_126f1f1.png) no-repeat 0 0;
-    width: 18px;
-    height: 25px;
+    width: 14px;
+    height: 20px;
     vertical-align: middle;
-    -webkit-background-size: 18px auto;
-    background-size: 18px auto;
+    -webkit-background-size: 14px auto;
+    background-size: 14px auto;
     -webkit-animation: audio_playing 1s infinite;
     display: none;
 }

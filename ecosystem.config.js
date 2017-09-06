@@ -30,7 +30,8 @@ module.exports = {
   deploy: {
     production: {
       user: 'root',
-      host: '116.62.195.14',
+      host:'123.207.79.244',
+      // host: '116.62.195.14',
       ref: 'origin/master',
       repo: 'git@github.com:sqzxcv/nina.git',
       path: '/var/www/nina',

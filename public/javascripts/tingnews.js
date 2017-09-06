@@ -29,7 +29,7 @@ var songmodel = `<div class="audio_wrp" id="music{{index}}" preload="true" docid
 <div class="audio_info_area ">
     <div class="audio_title " id="audio_title{{index}}">{{title}}</div>
     <div class="audio_source tips_global " id="audio_source{{index}}">{{audiosource}}</div>
-    <div class="audio_length tips_global " id="audio_length{{index}}" style="display:none"></div>
+    <div class="audio_length tips_global " id="audio_length{{index}}" style="display:none">00:00</div>
     <div class="audio_length tips_global " id="newstime{{index}}">{{newstime}}</div>
 </div>
 <div id="timeline{{index}}" class="progress_bar">

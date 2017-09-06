@@ -2,6 +2,7 @@ var songmodel = `<div class="audio_wrp" id="music{{index}}" preload="true" docid
 <div class="audio_play_area play " id="pButton{{index}} ">
     <i class="icon_audio_default " id="icon_audio_default{{index}}"></i>
     <i class="icon_audio_playing " id="icon_audio_playing{{index}}"></i>
+    <i class="icon_audio_didplay " id="icon_audio_didplay{{index}}"></i>
     <i>
         <div class="spinner" id="audioloading{{index}}">
             <div class="spinner-container container1">
@@ -25,7 +26,8 @@ var songmodel = `<div class="audio_wrp" id="music{{index}}" preload="true" docid
         </div>
     </i>
 </div>
-<div class="audio_length tips_global " id="audio_length{{index}}">{{newstime}}</div>
+<div class="audio_length tips_global " id="audio_length{{index}}" style="display:none"></div>
+<div class="audio_length tips_global " id="newstime{{index}}">{{newstime}}</div>
 <div class="audio_info_area ">
     <strong class="audio_title " id="audio_title{{index}}">{{title}}</strong>
     <div class="audio_source tips_global " id="audio_source{{index}}">{{audiosource}}</div>
@@ -43,7 +45,7 @@ window.onload = function () {
 
 var duration; // Duration of audio clip
 var playLength 
-var playhead, timelineWidth, playIcon, playingIcon;
+var playhead, timelineWidth, unPlayIcon, playingIcon;
 var audioPlayingId;
 var audioLoading;
 var timeline;
@@ -52,22 +54,13 @@ function initPlayer(newAudioInfo, isAutoPlay) {
     if (newAudioInfo.length == 0) {
         return
     }
-
     var audio = document.getElementsByTagName('audio')[0]; // id for audio element
-    // var audioWrapper = document.getElementById('music'); // audio interface
-
-    // auto play
-    // setTimeout(function(){
-    //     play();
-    // }, 2000);
     for (var index = 0; index < newAudioInfo.length; index++) {
         var element = newAudioInfo[index];
         var audioWrapper = document.getElementById('music' + element.doc_id);
-        var playheadd = document.getElementById('playhead' + element.doc_id);
         var currenttimeline = document.getElementById('timeline' + element.doc_id);
         currenttimeline.style.width = audioWrapper.offsetWidth + "px";
         audioWrapper.addEventListener("click", function (event) {
-
             var docId = $("#"+event.currentTarget.id).attr("docid")
             play(docId);
         }, false);
@@ -86,44 +79,54 @@ function initPlayer(newAudioInfo, isAutoPlay) {
             playhead = document.getElementById('playhead' + audioid)
             timeline = document.getElementById('timeline' + audioid);
             timelineWidth = $('#timeline' + audioid).width() - $('#playhead' + audioid).width();
-            playIcon = document.getElementById("icon_audio_default" + audioid)
+            unPlayIcon = document.getElementById("icon_audio_default" + audioid)
             playingIcon = document.getElementById("icon_audio_playing" + audioid)
             audioLoading = document.getElementById("audioloading" + audioid);
             $("#audioPlay1").attr("src", $("#music"+audioid).attr("audio"));
 
             audio.play();
             // toggle icons display
-            playIcon.style.display = "none";
+            unPlayIcon.style.display = "none";
             audioLoading.style.display = "inline-block"
             playingIcon.style.display = "none";
+            $("#icon_audio_didplay" + audioid).css("display", "none")
             timeline.style.display = "block"
+            $('#newstime' + audioid).css("display", "none");
+            $("#audio_length" + audioid).css("display", "block")
             audioPlayingId = audioid
         } else { // pause audio
+            $('#newstime' + audioPlayingId).css("display", "block");
+            $("#audio_length" + audioPlayingId).css("display", "none")
+            $("#icon_audio_didplay" + audioPlayingId).css("display", "inline-block")
             if (audioPlayingId == audioid) {
                 audio.pause()
             } else {
                 audio.pause()
-                playIcon.style.display = "inline-block";
+                unPlayIcon.style.display = "none";
                 audioLoading.style.display = "none";
                 playingIcon.style.display = "none";
                 timeline.style.display = "none";
+
 
             //初始化新的播放数据
             playLength = document.getElementById("audio_length" + audioid)
             playhead = document.getElementById('playhead' + audioid)
             timeline = document.getElementById('timeline' + audioid);
             timelineWidth = $('#timeline' + audioid).width() - $('#playhead' + audioid).width();
-            playIcon = document.getElementById("icon_audio_default" + audioid)
+            unPlayIcon = document.getElementById("icon_audio_default" + audioid)
             playingIcon = document.getElementById("icon_audio_playing" + audioid)
             audioLoading = document.getElementById("audioloading" + audioid);
             timeline = document.getElementById('timeline' + audioid);
             $("#audioPlay1").attr("src", $("#music"+audioid).attr("audio"));
             audio.play();
             // toggle icons display
-            playIcon.style.display = "none";
+            unPlayIcon.style.display = "none";
             audioLoading.style.display = "inline-block"
             playingIcon.style.display = "none";
             timeline.style.display = "block"
+            $("#icon_audio_didplay" + audioid).css("display", "none")
+            $('#newstime' + audioid).css("display", "none");
+            $("#audio_length" + audioid).css("display", "block");
             audioPlayingId = audioid
             }
         }
@@ -141,23 +144,30 @@ function initPlayer(newAudioInfo, isAutoPlay) {
         var playPercent = timelineWidth * (audio.currentTime / duration);
         playhead.style.width = playPercent + "px";
         if (audio.currentTime == duration) {
-            playIcon.style.display = "inline-block";
+            unPlayIcon.style.display = "none";
             playingIcon.style.display = "none";
+            $("#icon_audio_didplay" + audioPlayingId).css("display", "inline-block")
+            $('#newstime' + audioPlayingId).css("display", "block");
+            $("#audio_length" + audioPlayingId).css("display", "none")
         }
     }
 
     audio.onplaying = function () {
         console.log('onplaying')
-        playIcon.style.display = "none";
+        unPlayIcon.style.display = "none";
         audioLoading.style.display = "none";
         playingIcon.style.display = "inline-block";
+        $("#icon_audio_didplay" + audioPlayingId).css("display", "none")
     }
 
     audio.onpause = function () {
         console.log("onpause")
-        playIcon.style.display = "inline-block";
+        unPlayIcon.style.display = "none";
         audioLoading.style.display = "none";
         playingIcon.style.display = "none";
+        $("#icon_audio_didplay" + audioPlayingId).css("display", "inline-block")
+        $('#newstime' + audioPlayingId).css("display", "block");
+        $("#audio_length" + audioPlayingId).css("display", "none")
     }
 
     // Gets audio file duration
@@ -168,19 +178,17 @@ function initPlayer(newAudioInfo, isAutoPlay) {
 
     // when audio stop
     audio.addEventListener("ended", function () {
-        playIcon.style.display = "inline-block";
+        unPlayIcon.style.display = "none";
         playingIcon.style.display = "none";
+        $("#icon_audio_didplay" + audioPlayingId).css("display", "inline-block")
     }, false);
 
+    function add0(m){return m<10?'0'+m:m }
+
     function timeFormat(timestamp) {
-        var date = new Date(parseInt(timestamp) * 1000);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var hour = date.getHours();
-        var minite = date.getMinutes();
-        var second = date.getSeconds();
-        return minite + ":" + second;
+        var date = new Date(parseInt(timestamp * 1000));
+        var tamp = parseInt(timestamp);
+        return add0(parseInt(tamp/60)) + ":" + add0( tamp%60);
     }
 
     function audioAutoPlay(docid) {

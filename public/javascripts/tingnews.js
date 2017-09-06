@@ -1,8 +1,8 @@
 var songmodel = `<div class="audio_wrp" id="music{{index}}" preload="true" docid={{doc_id}} audio={{audio}}>
 <div class="audio_play_area play " id="pButton{{index}} ">
-    <i class="icon_audio_default " id="icon_audio_default{{index}}"></i>
+    <i class="icon_audio_default " id="icon_audio_default{{index}}" style="display:{{default_icon}}"></i>
     <i class="icon_audio_playing " id="icon_audio_playing{{index}}"></i>
-    <i class="icon_audio_didplay " id="icon_audio_didplay{{index}}"></i>
+    <i class="icon_audio_didplay " id="icon_audio_didplay{{index}}" style="display:{{didplay_icon}}"></i>
     <i>
         <div class="spinner" id="audioloading{{index}}">
             <div class="spinner-container container1">
@@ -95,6 +95,7 @@ function initPlayer(newAudioInfo, isAutoPlay) {
             $('#newstime' + audioid).css("display", "none");
             $("#audio_length" + audioid).css("display", "block")
             audioPlayingId = audioid
+            recodPlayerId(audioid)
         } else { // pause audio
             $('#newstime' + audioPlayingId).css("display", "block");
             $("#audio_length" + audioPlayingId).css("display", "none")
@@ -102,6 +103,7 @@ function initPlayer(newAudioInfo, isAutoPlay) {
             if (audioPlayingId == audioid) {
                 audio.pause()
             } else {
+                //正在播放,直接切换到下一首
                 audio.pause()
                 unPlayIcon.style.display = "none";
                 audioLoading.style.display = "none";
@@ -129,6 +131,7 @@ function initPlayer(newAudioInfo, isAutoPlay) {
                 $('#newstime' + audioid).css("display", "none");
                 $("#audio_length" + audioid).css("display", "block");
                 audioPlayingId = audioid
+                recodPlayerId(audioid)
             }
         }
     }
@@ -182,7 +185,7 @@ function initPlayer(newAudioInfo, isAutoPlay) {
         unPlayIcon.style.display = "none";
         playingIcon.style.display = "none";
         $("#icon_audio_didplay" + audioPlayingId).css("display", "inline-block")
-        var nextid = findNextAudio(false);
+        var nextid = findNextAudio(true);
         if (nextid) {
             play(nextid)
         }
@@ -212,6 +215,34 @@ function initPlayer(newAudioInfo, isAutoPlay) {
 
 };
 
+var localplayed_record = "localplayed_record"
+
+function recodPlayerId(audioid) {
+    if (window.localStorage) {
+        var localRecord = window.localStorage.localplayed_record
+        if (!localRecord) {
+            localRecord = {}
+        } else {
+            localRecord = JSON.parse(localRecord)
+        }
+        localRecord[audioid] = new Date().getTime();
+        window.localStorage.localplayed_record = JSON.stringify(localRecord)
+    }
+}
+
+function didPlayedAudio(audioid) {
+    if (window.localStorage) {
+        var localRecord = window.localStorage.localplayed_record
+        if (localRecord) {
+            localRecord = JSON.parse(localRecord)
+            if (localRecord[audioid] > 0) {
+                return true
+            }
+        }
+    }
+    return false
+}
+
 function findNextAudio(didSkipReaded) {
 
     if (audioPlayingId !== undefined) {
@@ -219,17 +250,31 @@ function findNextAudio(didSkipReaded) {
         var nextElement = null
         for (var index = 0; index < results.length; index++) {
             var element = results[index];
-            if (didFindCurrent && element.doc_id != audioPlayingId) {
-                nextElement = element
-                if(index < results.length - 3 && fetchdataing == false) {
-                    //将播放倒数第三个,自动请求新数据
-                    fetchNewsData()
+            if (didSkipReaded) {
+                if (didFindCurrent && element.doc_id != audioPlayingId && didPlayedAudio(element.doc_id) == false) {
+                    nextElement = element
+                    if (index < results.length - 3 && fetchdataing == false) {
+                        //将播放倒数第三个,自动请求新数据
+                        fetchNewsData()
+                    }
+                    break
                 }
-                break
+            } else {
+                if (didFindCurrent && element.doc_id != audioPlayingId) {
+                    nextElement = element
+                    if (index < results.length - 3 && fetchdataing == false) {
+                        //将播放倒数第三个,自动请求新数据
+                        fetchNewsData()
+                    }
+                    break
+                }
             }
             if (element.doc_id == audioPlayingId) {
                 didFindCurrent = true
             }
+        }
+        if (nextElement == null && fetchdataing == false) {
+            fetchNewsData()
         }
         return nextElement.doc_id
     } else {
@@ -263,6 +308,13 @@ function songdom(results) {
         model = model.replace(/{{newstime}}/g, getDateDiff(element['news_time']))
             .replace(/{{doc_id}}/g, element.doc_id)
             .replace(/{{audio}}/g, element.audio)
+        if (didPlayedAudio(element.doc_id)) {
+            model = model.replace(/{{default_icon}}/g, "none")
+                .replace(/{{didplay_icon}}/g, "block")
+        } else {
+            model = model.replace(/{{default_icon}}/g, "block")
+                .replace(/{{didplay_icon}}/g, "none")
+        }
         dom += model
         minid = minid > element.doc_id ? element.doc_id : minid
         //获取最小的 id 作为下次获取数据的起始点

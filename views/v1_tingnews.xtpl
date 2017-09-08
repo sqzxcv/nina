@@ -1,0 +1,29 @@
+{{extend ("./layout/layout")}}
+
+{{#block ("head")}}
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/tingnews.css" />
+    <script type="text/javascript" src="javascripts/tingnews_v1.js"></script>
+    <script type ="text/javascript" src="https://cdn.staticfile.org/zepto/1.2.0/zepto.min.js"></script>
+    <script type ="text/javascript">
+    results = {{{results}}}
+
+    </script>
+
+{{/block}}
+
+{{#block ("body")}}
+    <div class='logo'>
+        <img src="./images/logo-green.png">
+    </div>
+    <audio preload="true" src="" id="audioPlay1" autoplay="autoplay">
+    </audio>
+    <!-- player style -->
+    <div class=" audio_area" id="audioplayer">
+        <div class="audiolist" id = "audiolist">
+        </div>
+    </div>
+    <div class="content" id="content"> 
+    </div>
+{{/block}}

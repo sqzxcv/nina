@@ -2,6 +2,7 @@ const config = require('../../config')
 const bluebird = require('bluebird')
 const mysql = require('mysql')
 bluebird.promisifyAll(require("mysql/lib/Connection").prototype);
+bluebird.promisifyAll(require("mysql/lib/PoolConnection").prototype)
 bluebird.promisifyAll(require("mysql/lib/Pool").prototype);
 
 const tingnewsResponse = async(startid, count) => {
@@ -30,7 +31,8 @@ const tingnewsResponse = async(startid, count) => {
     if (results.length == 0) {
         console.warn("没有查询到数据")
     } 
-    await connection.release();
+    await pool.endAsync();
+    await connection.releaseAsync();
     return results
 }
 

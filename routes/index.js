@@ -4,6 +4,7 @@ const bluebird = require('bluebird')
 const mysql = bluebird.promisifyAll(require('mysql'))
 const config = require("../config")
 const tingnewsRes = require("./responser/tingnews")
+const tingnewsRes_v1 = require("./responser/tingnews_v1")
 var brain = new Brain();
 const sqlStringM = require('sqlstring')
 
@@ -47,8 +48,8 @@ router.get('/audio', async(ctx, next) => {
 })
 
 router.get('/news', async(ctx, next) => {
-
-    var startid = ctx.query.minid
+    // http://ting.lila-info.com/news
+    var startid = ctx.query.maxid
     var pagecount = 10
     if (startid === undefined) {
         startid = 0
@@ -75,6 +76,41 @@ router.get('/api/news', async(ctx, next) => {
     try {
         var results = await tingnewsRes(startid - 1, pagecount);
         ctx.body = JSON.stringify(results)
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+router.get('/api/news_v1', async (ctx, next) => {
+    
+    var startid = ctx.query.maxid
+    var pagecount = 10
+    var catalogid = ctx.query.catalogid
+    if (startid === undefined) {
+        startid = 0
+    }
+    try {
+        var res = await tingnewsRes_v1(catalogid,startid - 1, pagecount);
+        ctx.body = JSON.stringify(res.results)
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+router.get('/news_v1', async (ctx, next) => {
+    var startid = ctx.query.maxid
+    var pagecount = 10
+    var catalogid = ctx.query.catalogid
+    if (startid === undefined) {
+        startid = 0
+    }
+    try {
+        var res = await tingnewsRes_v1(catalogid, startid - 1, pagecount);
+        await ctx.render('v1_tingnews', {
+            "title": res.title,
+            "results": JSON.stringify(res.results)
+        });
+
     } catch (error) {
         console.error(error)
     }

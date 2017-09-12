@@ -81,8 +81,8 @@ router.get('/api/news', async(ctx, next) => {
     }
 })
 
-router.get('/api/news_v1', async (ctx, next) => {
-    
+router.get('/api/news_v1', async(ctx, next) => {
+
     var startid = ctx.query.maxid
     var pagecount = 10
     var catalogid = ctx.query.catalogid
@@ -90,14 +90,14 @@ router.get('/api/news_v1', async (ctx, next) => {
         startid = 0
     }
     try {
-        var res = await tingnewsRes_v1(catalogid,startid - 1, pagecount);
+        var res = await tingnewsRes_v1(catalogid, startid - 1, pagecount);
         ctx.body = JSON.stringify(res.results)
     } catch (error) {
         console.error(error)
     }
 })
 
-router.get('/news_v1', async (ctx, next) => {
+router.get('/news_v1', async(ctx, next) => {
     var startid = ctx.query.maxid
     var pagecount = 10
     var catalogid = ctx.query.catalogid
@@ -111,6 +111,27 @@ router.get('/news_v1', async (ctx, next) => {
             "results": JSON.stringify(res.results)
         });
 
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+router.get('/api/news_wx', async(ctx, next) => {
+
+    var startid = ctx.query.maxid
+    var pagecount = 10
+    var catalogid = ctx.query.catalogid
+    if (startid === undefined) {
+        startid = 0
+    }
+    try {
+        var res = await tingnewsRes_v1(catalogid, startid - 1, pagecount);
+        var results = {
+            "status": 200,
+            "message": "ok",
+            "results": res.results
+        }
+        ctx.body = JSON.stringify(results)
     } catch (error) {
         console.error(error)
     }

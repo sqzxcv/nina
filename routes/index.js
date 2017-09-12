@@ -126,10 +126,21 @@ router.get('/api/news_wx', async(ctx, next) => {
     }
     try {
         var res = await tingnewsRes_v1(catalogid, startid - 1, pagecount);
+        var mp3list = []
+        for (var index = 0; index < infos.length; index++) {
+            var audioinfo = infos[index];
+            var mp3 = {}
+            mp3.title = audioinfo.title
+            mp3.image = "http://image.leting.io/" + audioinfo.image
+            mp3.src = "http://audio.leting.io/" + audioinfo.audio
+            mp3.catalog_name = audioinfo.catalog_name
+            mp3.audioid = audioinfo.doc_id
+            mp3list.push(mp3)
+        }
         var results = {
             "status": 200,
             "message": "ok",
-            "results": res.results
+            "results": mp3list
         }
         ctx.body = JSON.stringify(results)
     } catch (error) {

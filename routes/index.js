@@ -127,8 +127,8 @@ router.get('/api/news_wx', async(ctx, next) => {
     try {
         var res = await tingnewsRes_v1(catalogid, startid - 1, pagecount);
         var mp3list = []
-        for (var index = 0; index < infos.length; index++) {
-            var audioinfo = infos[index];
+        for (var index = 0; index < res.results.length; index++) {
+            var audioinfo = res.results[index];
             var mp3 = {}
             mp3.title = audioinfo.title
             mp3.image = "http://image.leting.io/" + audioinfo.image

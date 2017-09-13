@@ -127,6 +127,23 @@ router.get('/api/news_wx', async(ctx, next) => {
     try {
         var res = await tingnewsRes_v1(catalogid, startid - 1, pagecount);
         var mp3list = []
+        var catalogs = [{
+                catalogid: 1,
+                catalog_name: "科技数码"
+            },
+            {
+                catalogid: 2,
+                catalog_name: "金融股票"
+            },
+            {
+                catalogid: 3,
+                catalog_name: "娱乐体育"
+            },
+            {
+                catalogid: 4,
+                catalog_name: "社会军事"
+            }
+        ]
         for (var index = 0; index < res.results.length; index++) {
             var audioinfo = res.results[index];
             var mp3 = {}
@@ -140,7 +157,64 @@ router.get('/api/news_wx', async(ctx, next) => {
         var results = {
             "status": 200,
             "message": "ok",
-            "results": mp3list
+            "results": mp3list,
+            "catalogs": catalogs
+        }
+        ctx.body = JSON.stringify(results)
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+/**
+ * 返回客户端的结果包括
+ * 1=科技数码:科技 + 数码 + 汽车
+ * 2=金融股票:产经 + 房产 + 股票 + 金融
+ * 3=娱乐体育:娱乐 + 体育 + 脱口秀
+ * 4=社会军事:社会+军事:国内 + 国际 + 军事 + 社会
+ */
+router.get('/api/catalog_wx', async(ctx, next) => {
+
+    var startid = 0
+    var pagecount = 10
+    var catalogs = [{
+            catalogid: 1,
+            catalog_name: "科技数码"
+        },
+        {
+            catalogid: 2,
+            catalog_name: "金融股票"
+        },
+        {
+            catalogid: 3,
+            catalog_name: "娱乐体育"
+        },
+        {
+            catalogid: 4,
+            catalog_name: "社会军事"
+        }
+    ]
+    try {
+        for (var index = 0; index < catalogs.length; index++) {
+            var catalog = catalogs[index];
+            var res = await tingnewsRes_v1(catalog.catalogid, startid - 1, pagecount);
+            var mp3list = []
+            for (var index = 0; index < res.results.length; index++) {
+                var audioinfo = res.results[index];
+                var mp3 = {}
+                mp3.title = audioinfo.title
+                mp3.image = "http://image.leting.io/" + audioinfo.image
+                mp3.src = "http://audio.leting.io/" + audioinfo.audio
+                mp3.catalog_name = audioinfo.catalog_name
+                mp3.audioid = audioinfo.doc_id
+                mp3list.push(mp3)
+            }
+            catalogs[index].results = mp3list
+        }
+        var results = {
+            "status": 200,
+            "message": "ok",
+            "catalogs": catalogs
         }
         ctx.body = JSON.stringify(results)
     } catch (error) {

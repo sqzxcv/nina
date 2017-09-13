@@ -127,23 +127,6 @@ router.get('/api/news_wx', async(ctx, next) => {
     try {
         var res = await tingnewsRes_v1(catalogid, startid - 1, pagecount);
         var mp3list = []
-        var catalogs = [{
-                catalogid: 1,
-                catalog_name: "科技数码"
-            },
-            {
-                catalogid: 2,
-                catalog_name: "金融股票"
-            },
-            {
-                catalogid: 3,
-                catalog_name: "娱乐体育"
-            },
-            {
-                catalogid: 4,
-                catalog_name: "社会军事"
-            }
-        ]
         for (var index = 0; index < res.results.length; index++) {
             var audioinfo = res.results[index];
             var mp3 = {}
@@ -157,8 +140,7 @@ router.get('/api/news_wx', async(ctx, next) => {
         var results = {
             "status": 200,
             "message": "ok",
-            "results": mp3list,
-            "catalogs": catalogs
+            "results": mp3list
         }
         ctx.body = JSON.stringify(results)
     } catch (error) {
@@ -199,8 +181,8 @@ router.get('/api/catalog_wx', async(ctx, next) => {
             var catalog = catalogs[index];
             var res = await tingnewsRes_v1(catalog.catalogid, startid - 1, pagecount);
             var mp3list = []
-            for (var index = 0; index < res.results.length; index++) {
-                var audioinfo = res.results[index];
+            for (var j = 0; j < res.results.length; j++) {
+                var audioinfo = res.results[j];
                 var mp3 = {}
                 mp3.title = audioinfo.title
                 mp3.image = "http://image.leting.io/" + audioinfo.image
@@ -209,7 +191,7 @@ router.get('/api/catalog_wx', async(ctx, next) => {
                 mp3.audioid = audioinfo.doc_id
                 mp3list.push(mp3)
             }
-            catalogs[index].results = mp3list
+            catalogs[index]["results"] = mp3list
         }
         var results = {
             "status": 200,

@@ -24,7 +24,7 @@ const tingnewsResponse_v1 = async(catalog_id, startid, count) => {
         password: config['dbpwd'],
         database: "Nina",
         connectionLimit: 100,
-        port: "3306",
+        port: config['dbport'],
         waitForConnections: false
     });
     try {

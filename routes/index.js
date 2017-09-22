@@ -131,8 +131,14 @@ router.get('/api/news_wx', async(ctx, next) => {
             var audioinfo = res.results[index];
             var mp3 = {}
             mp3.title = audioinfo.title
-            mp3.image = "http://image.leting.io/" + audioinfo.image
-            mp3.src = "http://audio.leting.io/" + audioinfo.audio
+            if (audioinfo.doc_id.indexOf('tts_raw_')) {
+
+                mp3.image = audioinfo.image
+                mp3.src = 'http://audio.lila-info.com/' + audioinfo.audio
+            } else {
+                mp3.image = "http://image.leting.io/" + audioinfo.image
+                mp3.src = "http://audio.leting.io/" + audioinfo.audio
+            }
             mp3.catalog_name = audioinfo.catalog_name
             mp3.audioid = audioinfo.doc_id
             mp3list.push(mp3)

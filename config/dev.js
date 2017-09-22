@@ -2,7 +2,7 @@ var config = {
     // "dbhost":"172.104.91.83",
     // "dbuser":"admin",
     // "dbpwd":"Anhuiqiang851",
-    "dbhost": "localhost",
+    "dbhost": "123.207.79.244",
     "dbuser": "root",
     "dbpwd": "Anhuiqiang851",
     "dbport": "3310",

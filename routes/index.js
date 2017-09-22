@@ -131,7 +131,7 @@ router.get('/api/news_wx', async(ctx, next) => {
             var audioinfo = res.results[index];
             var mp3 = {}
             mp3.title = audioinfo.title
-            if (audioinfo.doc_id.indexOf('tts_raw_')) {
+            if (audioinfo.news_id.indexOf('tts_raw_') == 0) {
 
                 mp3.image = audioinfo.image
                 mp3.src = 'http://audio.lila-info.com/' + audioinfo.audio
@@ -191,8 +191,7 @@ router.get('/api/catalog_wx', async(ctx, next) => {
                 var audioinfo = res.results[j];
                 var mp3 = {}
                 mp3.title = audioinfo.title
-                if (audioinfo.doc_id.indexOf('tts_raw_')) {
-
+                if (audioinfo.news_id.indexOf('tts_raw_') == 0) {
                     mp3.image = audioinfo.image
                     mp3.src = 'http://audio.lila-info.com/' + audioinfo.audio
                 } else {

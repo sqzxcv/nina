@@ -11,7 +11,7 @@
   "dependencies": {
     "axios": "^0.15.3",
     "babel-register": "^6.24.1",
-    "bl": "^1.2.1",
+    "bl": "^4.0.3",
     "bluebird": "^3.5.0",
     "debug": "^2.6.8",
     "form-data": "^2.1.2",
